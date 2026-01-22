@@ -6,13 +6,13 @@ load_dotenv(dotenv_path="backend/.env")
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from backend.db import create_tables
-from backend.error_handlers import (
+from db import create_tables
+from error_handlers import (
     http_exception_handler,
     validation_exception_handler,
     general_exception_handler
 )
-from backend.logging_config import setup_logging
+from logging_config import setup_logging
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 import logging
