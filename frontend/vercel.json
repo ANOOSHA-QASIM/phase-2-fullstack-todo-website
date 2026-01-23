@@ -1,5 +1,4 @@
 {
-  "root": "frontend",
   "framework": "nextjs",
   "build": {
     "command": "next build"
