@@ -185,7 +185,7 @@ export default function PendingTasksPage() {
               transition={{ duration: 0.2 }}
             >
               <Card className="text-center py-12">
-                <div className="mx-auto w-16 h-16 bg-[rgb(var(--primary)/0.1)] rounded-full flex items-center justify-center mb-4">
+                <div className="mx-auto w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
                   <span className="text-2xl">⏳</span>
                 </div>
                 <h3 className="text-lg font-medium text-[rgb(var(--foreground))] mb-2">
@@ -212,7 +212,7 @@ export default function PendingTasksPage() {
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.2 }}
-                      className="flex items-center justify-between p-4 bg-[rgb(var(--muted))] rounded-md hover:bg-[rgb(var(--muted)/0.8)] transition-colors group"
+                      className="flex items-center justify-between p-4 bg-[rgb(var(--muted))] rounded-md hover:opacity-80 transition-colors group"
                     >
                       <div className="flex items-center flex-1">
                         <input
@@ -237,13 +237,13 @@ export default function PendingTasksPage() {
                       <div className="flex space-x-2 ml-4">
                         <button
                           onClick={() => openEditModal(todo)}
-                          className="p-2 text-[rgb(var(--primary))] hover:bg-[rgb(var(--primary)/0.1)] rounded-full transition-colors"
+                          className="p-2 text-[rgb(var(--primary))] bg-transparent hover:bg-opacity-10 rounded-full transition-colors"
                         >
                           <span className="text-lg">✏️</span>
                         </button>
                         <button
                           onClick={() => handleDeleteTask(todo.id)}
-                          className="p-2 text-[rgb(var(--destructive))] hover:bg-[rgb(var(--destructive)/0.1)] rounded-full transition-colors"
+                          className="p-2 text-[rgb(var(--destructive))] bg-transparent hover:bg-opacity-10 rounded-full transition-colors"
                         >
                           <span className="text-lg">🗑️</span>
                         </button>
@@ -303,7 +303,7 @@ export default function PendingTasksPage() {
 
           {/* Chatbot */}
           <div className="fixed bottom-6 right-6 z-50">
-            <div className="bg-[rgb(var(--primary))] text-white p-4 rounded-full shadow-lg cursor-pointer hover:bg-[rgb(var(--primary)/0.9)] transition-colors">
+            <div className="bg-[rgb(var(--primary))] text-white p-4 rounded-full shadow-lg cursor-pointer hover:opacity-90 transition-colors">
               <span className="text-xl">💬</span>
             </div>
           </div>

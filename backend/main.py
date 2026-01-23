@@ -58,6 +58,6 @@ async def root():
     }
 
 # Include routes
-from backend.routes import tasks, auth
+from routes import tasks, auth
 app.include_router(tasks.router, prefix="/api/tasks", tags=["tasks"])
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])

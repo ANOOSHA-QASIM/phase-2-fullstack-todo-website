@@ -95,7 +95,7 @@ export default function HomePage() {
 
           {/* Chatbot */}
           <div className="fixed bottom-6 right-6 z-50">
-            <div className="bg-[rgb(var(--primary))] text-white p-4 rounded-full shadow-lg cursor-pointer hover:bg-[rgb(var(--primary)/0.9)] transition-colors">
+            <div className="bg-[rgb(var(--primary))] text-white p-4 rounded-full shadow-lg cursor-pointer hover:opacity-90 transition-colors">
               <span className="text-xl">💬</span>
             </div>
           </div>

@@ -1,6 +1,6 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from .utils import verify_token
+from utils import verify_token
 from typing import Optional
 import os
 from dotenv import load_dotenv

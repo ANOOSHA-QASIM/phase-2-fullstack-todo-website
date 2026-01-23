@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Body
-from backend.dependencies import get_current_user
-from backend.models import SuccessResponse
-from backend.middleware import auth_rate_limiter
-from backend.utils import create_access_token, verify_token
+from dependencies import get_current_user
+from models import SuccessResponse
+from middleware import auth_rate_limiter
+from utils import create_access_token, verify_token
 from fastapi.responses import JSONResponse
 import hashlib
 import uuid

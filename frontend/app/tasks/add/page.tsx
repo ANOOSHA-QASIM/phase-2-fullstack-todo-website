@@ -99,7 +99,7 @@ export default function AddTaskPage() {
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-4 p-3 bg-[rgb(var(--destructive)/0.1)] text-[rgb(var(--destructive))] rounded-md border border-[rgb(var(--destructive)/0.2)]"
+              className="mb-4 p-3 bg-red-100 text-[rgb(var(--destructive))] rounded-md border border-red-200"
             >
               {error}
             </motion.div>
@@ -155,7 +155,7 @@ export default function AddTaskPage() {
 
           {/* Chatbot */}
           <div className="fixed bottom-6 right-6 z-50">
-            <div className="bg-[rgb(var(--primary))] text-white p-4 rounded-full shadow-lg cursor-pointer hover:bg-[rgb(var(--primary)/0.9)] transition-colors">
+            <div className="bg-[rgb(var(--primary))] text-white p-4 rounded-full shadow-lg cursor-pointer hover:opacity-90 transition-colors">
               <span className="text-xl">💬</span>
             </div>
           </div>
