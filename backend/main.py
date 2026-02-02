@@ -30,7 +30,7 @@ app = FastAPI(
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"
+    allow_origins=["https://phase-2-fullstack-todo-website.vercel.app"
     "https://anooshaqasim-full-stack-todo-backend.hf.space"],  # In production, change this to your frontend URL
     allow_credentials=True,
     allow_methods=["*"],
