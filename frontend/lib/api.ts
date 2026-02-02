@@ -1,7 +1,7 @@
 import { AuthResponse } from '@/types/user';
 import { Todo, TodoCreateInput, TodoUpdateInput } from '@/types/todo';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://anooshaqasim-full-stack-todo-backend.hf.space';
 
 interface ApiResponse<T> {
   success: boolean;
@@ -115,11 +115,11 @@ class ApiClient {
 
   // Task methods
   async getTasks(): Promise<ApiResponse<Todo[]>> {
-    return this.request<Todo[]>('/api/tasks');
+    return this.request<Todo[]>('/api/tasks/');
   }
 
   async createTask(task: TodoCreateInput): Promise<ApiResponse<Todo>> {
-    return this.request<Todo>('/api/tasks', {
+    return this.request<Todo>('/api/tasks/', {
       method: 'POST',
       body: JSON.stringify(task),
     });

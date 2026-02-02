@@ -67,8 +67,8 @@ export default function CompletedTasksPage() {
 
         const tasks: Todo[] = Array.isArray(data) ? data : data.tasks || [];
 
-        const pendingTasks = tasks.filter(task => !task.completed);
-        setTodos(pendingTasks);
+        const completedTasks = tasks.filter(task => task.completed);
+        setTodos(completedTasks);
       }
     } catch (err: any) {
       console.error(err);

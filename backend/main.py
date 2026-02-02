@@ -30,7 +30,8 @@ app = FastAPI(
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, change this to your frontend URL
+    allow_origins=["http://localhost:3000"
+    "https://anooshaqasim-full-stack-todo-backend.hf.space"],  # In production, change this to your frontend URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
