@@ -8,7 +8,7 @@ interface ButtonProps
   > {
   children: ReactNode;
   variant?: 'primary' | 'secondary' | 'ghost' | 'outline';
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | "icon";
   fullWidth?: boolean;
   asChild?: boolean; // ✅ support for Radix Slot
 }
@@ -38,6 +38,7 @@ export default function Button({
     sm: 'px-3 py-1.5 text-sm',
     md: 'px-4 py-2 text-sm',
     lg: 'px-6 py-3 text-base',
+    icon: "h-10 w-10 p-0",
   };
 
   const widthClass = fullWidth ? 'w-full' : '';

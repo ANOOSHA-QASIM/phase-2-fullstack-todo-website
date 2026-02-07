@@ -27,6 +27,8 @@ async def get_tasks(
             "title": task.title,
             "description": task.description,
             "completed": task.completed,
+            "priority": task.priority,
+            "due_date": task.due_date,
             "user_id": task.user_id,
             "created_at": task.created_at,
             "updated_at": task.updated_at
@@ -59,6 +61,8 @@ async def create_task(
         title=task_data.title,
         description=task_data.description,
         completed=task_data.completed,
+        priority=task_data.priority,
+        due_date=task_data.due_date,
         user_id=user_id
     )
     session.add(task)
@@ -72,6 +76,8 @@ async def create_task(
             "title": task.title,
             "description": task.description,
             "completed": task.completed,
+            "priority": task.priority,
+            "due_date": task.due_date,
             "user_id": task.user_id,
             "created_at": task.created_at,
             "updated_at": task.updated_at
@@ -104,6 +110,8 @@ async def get_task(
             "title": task.title,
             "description": task.description,
             "completed": task.completed,
+            "priority": task.priority,
+            "due_date": task.due_date,
             "user_id": task.user_id,
             "created_at": task.created_at,
             "updated_at": task.updated_at
@@ -138,6 +146,10 @@ async def update_task(
         task.description = task_data.description
     if task_data.completed is not None:
         task.completed = task_data.completed
+    if task_data.priority is not None:
+        task.priority = task_data.priority
+    if task_data.due_date is not None:
+        task.due_date = task_data.due_date
 
     task.updated_at = datetime.utcnow()
     session.add(task)
@@ -151,6 +163,8 @@ async def update_task(
             "title": task.title,
             "description": task.description,
             "completed": task.completed,
+            "priority": task.priority,
+            "due_date": task.due_date,
             "user_id": task.user_id,
             "created_at": task.created_at,
             "updated_at": task.updated_at
@@ -218,6 +232,8 @@ async def toggle_task_completion(
             "title": task.title,
             "description": task.description,
             "completed": task.completed,
+            "priority": task.priority,
+            "due_date": task.due_date,
             "user_id": task.user_id,
             "created_at": task.created_at,
             "updated_at": task.updated_at

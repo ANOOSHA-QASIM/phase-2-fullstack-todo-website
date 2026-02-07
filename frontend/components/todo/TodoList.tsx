@@ -5,7 +5,7 @@ import { Todo } from '@/types/todo';
 interface TodoListProps {
   todos: Todo[];
   onToggle: (id: string) => void;
-  onEdit: (id: string, title: string, description?: string) => void;
+  onEdit: (id: string, title: string, description?: string, priority?: 'low' | 'medium' | 'high', dueDate?: string) => void;
   onDelete: (id: string) => void;
 }
 
@@ -25,6 +25,8 @@ export default function TodoList({
             title={todo.title}
             description={todo.description}
             completed={todo.completed}
+            priority={todo.priority}
+            dueDate={todo.dueDate}
             onToggle={onToggle}
             onEdit={onEdit}
             onDelete={onDelete}

@@ -2,23 +2,32 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Sidebar from '@/components/layout/Sidebar';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Card from '@/components/ui/Card';
 import { motion } from 'framer-motion';
 import { apiClient } from '@/lib/api';
 
+
+
 export default function AddTaskPage() {
   const router = useRouter();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    title: string;
+    description: string;
+    priority: 'low' | 'medium' | 'high';
+    dueDate?: string;
+  }>({
     title: '',
-    description: ''
+    description: '',
+    priority: 'medium',
+    dueDate: ''
   });
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -53,12 +62,14 @@ export default function AddTaskPage() {
       const response = await apiClient.createTask({
         title: formData.title,
         description: formData.description,
+        priority: formData.priority,
+        due_date: formData.dueDate || null,
         completed: false
       });
 
       if (response.success && response.data) {
         // Redirect to tasks page after successful creation
-        router.push('/tasks');
+        router.push('/dashboard');
       } else {
         setError('Failed to create task');
       }
@@ -77,10 +88,9 @@ export default function AddTaskPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row">
-      <Sidebar />
-
-      <main className="flex-1 py-8 px-4 sm:px-6 md:ml-64">
+    <div className="min-h-screen flex flex-col">
+    
+      <main className="flex-1 py-8 px-4 sm:px-6">
         <div className="max-w-2xl mx-auto">
           <div className="flex justify-between items-center mb-8">
             <motion.h1
@@ -93,6 +103,20 @@ export default function AddTaskPage() {
             <Button variant="secondary" onClick={handleLogout}>
               Logout
             </Button>
+          </div>
+
+          <div className="flex justify-center mb-8">
+            <div className="inline-flex rounded-md shadow-sm" role="group">
+              <Button asChild variant="outline" className="rounded-r-none border-r-0">
+                <a href="/dashboard">All Tasks</a>
+              </Button>
+              <Button asChild variant="outline" className="rounded-none border-r-0">
+                <a href="/tasks/pending">Pending</a>
+              </Button>
+              <Button asChild variant="outline" className="rounded-l-none">
+                <a href="/tasks/completed">Completed</a>
+              </Button>
+            </div>
           </div>
 
           {error && (
@@ -133,6 +157,45 @@ export default function AddTaskPage() {
                   fullWidth
                 />
 
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* PRIORITY */}
+                  <div>
+                    <label className="block text-sm font-medium text-[rgb(var(--foreground))] mb-2">
+                      Priority
+                    </label>
+
+                    <select
+                      value={formData.priority}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          priority: e.target.value as 'low' | 'medium' | 'high',
+                        })
+                      }
+                      className="w-full px-3 py-2 bg-[rgb(var(--input))] text-[rgb(var(--foreground))] rounded-md border border-[rgb(var(--border))] focus:outline-none focus:ring-2 focus:ring-[rgb(var(--ring))] focus:border-transparent transition-all duration-200"
+                    >
+                      <option value="low">Low</option>
+                      <option value="medium">Medium</option>
+                      <option value="high">High</option>
+                    </select>
+                  </div>
+
+                  {/* DUE DATE */}
+                  <Input
+                    label="Due Date (optional)"
+                    type="date"
+                    value={formData.dueDate}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        dueDate: e.target.value,
+                      })
+                    }
+                    fullWidth
+                  />
+                </div>
+
+
                 <div className="flex space-x-4">
                   <Button
                     type="submit"
@@ -152,13 +215,6 @@ export default function AddTaskPage() {
               </form>
             </Card>
           </motion.div>
-
-          {/* Chatbot */}
-          <div className="fixed bottom-6 right-6 z-50">
-            <div className="bg-[rgb(var(--primary))] text-white p-4 rounded-full shadow-lg cursor-pointer hover:opacity-90 transition-colors">
-              <span className="text-xl">💬</span>
-            </div>
-          </div>
         </div>
       </main>
     </div>

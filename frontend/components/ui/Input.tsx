@@ -22,7 +22,7 @@ export default function Input({
   const widthClass = fullWidth ? 'w-full' : '';
   const containerClasses = `mb-4 ${widthClass}`;
 
-  const inputClasses = `w-full px-3 py-2 bg-[rgb(var(--input))] text-[rgb(var(--foreground))] rounded-lg border ${
+  const inputClasses = `w-full px-3 py-2 bg-[rgb(var(--input))] text-[rgb(var(--foreground))] rounded-md border ${
     error ? 'border-[rgb(var(--destructive))]' : 'border-[rgb(var(--border))]'
   } focus:outline-none focus:ring-2 focus:ring-[rgb(var(--ring))] focus:border-transparent transition-all duration-200 ${
     className

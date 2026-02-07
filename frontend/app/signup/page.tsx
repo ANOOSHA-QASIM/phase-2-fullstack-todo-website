@@ -2,11 +2,10 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Card from '@/components/ui/Card';
+
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 
@@ -90,7 +89,7 @@ export default function SignupPage() {
           transition={{ duration: 0.2 }}
           className="max-w-md w-full"
         >
-          <Card title="Join TaskFlow">
+          <Card animated={true} title="Join TalkTodo">
             {error && (
               <div className="mb-4 p-3 bg-[rgb(var(--destructive)/0.1)] text-[rgb(var(--destructive))] rounded-md border border-[rgb(var(--destructive)/0.2)] text-sm">
                 {error}
@@ -165,6 +164,8 @@ export default function SignupPage() {
           </Card>
         </motion.div>
       </main>
+
+      
     </div>
   );
 }

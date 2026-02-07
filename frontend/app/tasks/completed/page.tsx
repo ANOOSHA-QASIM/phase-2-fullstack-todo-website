@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Sidebar from '@/components/layout/Sidebar';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Input from '@/components/ui/Input';
 import { motion } from 'framer-motion';
 import { apiClient } from '@/lib/api';
+
 
 import type { Todo } from '@/types/todo';
 type TasksApiResponse =
@@ -24,6 +24,8 @@ export default function CompletedTasksPage() {
   const [editingTask, setEditingTask] = useState<Todo | null>(null);
   const [editTitle, setEditTitle] = useState('');
   const [editDescription, setEditDescription] = useState('');
+  const [editPriority, setEditPriority] = useState<'low' | 'medium' | 'high'>('medium');
+  const [editDueDate, setEditDueDate] = useState('');
   const [editCompleted, setEditCompleted] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
 
@@ -106,6 +108,8 @@ export default function CompletedTasksPage() {
     setEditingTask(task);
     setEditTitle(task.title);
     setEditDescription(task.description || '');
+    setEditPriority(task.priority || 'medium');
+    setEditDueDate(task.dueDate || '');
     setEditCompleted(task.completed);
     setShowEditModal(true);
   };
@@ -122,12 +126,14 @@ export default function CompletedTasksPage() {
       const response = await apiClient.updateTask(String(editingTask.id), {
         title: editTitle,
         description: editDescription,
+        priority: editPriority,
+        due_date: editDueDate || null,
         completed: editCompleted
       });
 
       if (response.success && response.data) {
         setTodos(todos.map(todo =>
-          todo.id === editingTask.id ? { ...todo, title: response.data!.title, description: response.data!.description, completed: response.data!.completed } : todo
+          todo.id === editingTask.id ? { ...todo, ...response.data! } : todo
         ));
         closeEditModal();
       } else {
@@ -146,9 +152,9 @@ export default function CompletedTasksPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex flex-col md:flex-row">
-        <Sidebar />
-        <main className="flex-1 flex items-center justify-center md:ml-64">
+      <div className="min-h-screen flex flex-col">
+    
+        <main className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[rgb(var(--primary))] mx-auto mb-4"></div>
             <p className="text-[rgb(var(--muted-foreground))]">Loading completed tasks...</p>
@@ -159,10 +165,10 @@ export default function CompletedTasksPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row">
-      <Sidebar />
+    <div className="min-h-screen flex flex-col">
+    
 
-      <main className="flex-1 py-8 px-4 sm:px-6 md:ml-64">
+      <main className="flex-1 py-8 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto">
           <div className="flex justify-between items-center mb-8">
             <motion.h1
@@ -175,6 +181,21 @@ export default function CompletedTasksPage() {
             <Button variant="secondary" onClick={handleLogout}>
               Logout
             </Button>
+          </div>
+
+          {/* Navigation Tabs */}
+          <div className="flex justify-center mb-8">
+            <div className="inline-flex rounded-md shadow-sm" role="group">
+              <Button asChild variant="outline" className="rounded-r-none border-r-0">
+                <a href="/tasks">All Tasks</a>
+              </Button>
+              <Button asChild variant="outline" className="rounded-none border-r-0">
+                <a href="/tasks/pending">Pending</a>
+              </Button>
+              <Button asChild variant="secondary" className="rounded-l-none">
+                <a href="/tasks/completed">Completed</a>
+              </Button>
+            </div>
           </div>
 
           {todos.length === 0 ? (
@@ -201,8 +222,8 @@ export default function CompletedTasksPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <Card title={`Completed Tasks (${todos.length})`}>
-                <div className="space-y-3">
+              <Card animated={true} title={`Completed Tasks (${todos.length})`}>
+                <div className="space-y-4">
                   {todos.map((todo) => (
                     <motion.div
                       key={todo.id}
@@ -211,38 +232,52 @@ export default function CompletedTasksPage() {
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.2 }}
-                      className="flex items-center justify-between p-4 bg-[rgb(var(--muted))] rounded-md hover:opacity-80 transition-colors group"
+                      className="flex items-start justify-between p-4 bg-[rgb(var(--muted))] rounded-lg hover:opacity-90 transition-colors group antigravity-card-no-border"
                     >
-                      <div className="flex items-center flex-1">
+                      <div className="flex items-start flex-1">
                         <input
                           type="checkbox"
                           checked={todo.completed}
                           onChange={() => handleToggleTask(todo.id)}
-                          className="w-4 h-4 text-[rgb(var(--primary))] rounded cursor-pointer border-[rgb(var(--border))] bg-white focus:ring-[rgb(var(--primary))] focus:ring-offset-2"
+                          className="w-5 h-5 text-[rgb(var(--primary))] rounded cursor-pointer border-[rgb(var(--border))] bg-white focus:ring-[rgb(var(--primary))] focus:ring-offset-2 mt-0.5 mr-4 flex-shrink-0"
                         />
-                        <div className="ml-4 flex-1 min-w-0">
-                          <p
-                            className={`font-medium line-through text-[rgb(var(--muted-foreground))]`}
-                          >
-                            {todo.title}
-                          </p>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between">
+                            <p
+                              className={`font-medium line-through text-[rgb(var(--muted-foreground))] opacity-70`}
+                            >
+                              {todo.title}
+                            </p>
+                            <span className={`text-xs px-2 py-1 rounded-full ml-2 ${
+                              todo.priority === 'high' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' :
+                              todo.priority === 'medium' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300' :
+                              'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                            }`}>
+                              {todo.priority ? todo.priority.charAt(0).toUpperCase() + todo.priority.slice(1) : 'Medium'}
+                            </span>
+                          </div>
                           {todo.description && (
-                            <p className={`text-sm mt-1 line-through text-[rgb(var(--muted-foreground))] opacity-70`}>
+                            <p className={`text-sm mt-2 line-through text-[rgb(var(--muted-foreground))] opacity-50`}>
                               {todo.description}
+                            </p>
+                          )}
+                          {todo.dueDate && (
+                            <p className={`text-xs mt-2 line-through text-[rgb(var(--muted-foreground))] opacity-50`}>
+                              Due: {new Date(todo.dueDate).toLocaleDateString()}
                             </p>
                           )}
                         </div>
                       </div>
-                      <div className="flex space-x-2 ml-4">
+                      <div className="flex space-x-3 ml-4 flex-shrink-0">
                         <button
                           onClick={() => openEditModal(todo)}
-                          className="p-2 text-[rgb(var(--primary))] bg-transparent hover:bg-opacity-10 rounded-full transition-colors"
+                          className="p-2 text-[rgb(var(--primary))] bg-transparent hover:bg-[rgb(var(--secondary)/0.5)] rounded-full transition-colors"
                         >
                           <span className="text-lg">✏️</span>
                         </button>
                         <button
                           onClick={() => handleDeleteTask(todo.id)}
-                          className="p-2 text-[rgb(var(--destructive))] bg-transparent hover:bg-opacity-10 rounded-full transition-colors"
+                          className="p-2 text-[rgb(var(--destructive))] bg-transparent hover:bg-[rgb(var(--secondary)/0.5)] rounded-full transition-colors"
                         >
                           <span className="text-lg">🗑️</span>
                         </button>
@@ -276,6 +311,31 @@ export default function CompletedTasksPage() {
                   fullWidth
                 />
 
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                  <div>
+                    <label className="block text-sm font-medium text-[rgb(var(--foreground))] mb-2">
+                      Priority
+                    </label>
+                    <select
+                      value={editPriority}
+                      onChange={(e) => setEditPriority(e.target.value as 'low' | 'medium' | 'high')}
+                      className="w-full px-3 py-2 bg-[rgb(var(--input))] text-[rgb(var(--foreground))] rounded-md border border-[rgb(var(--border))] focus:outline-none focus:ring-2 focus:ring-[rgb(var(--ring))] focus:border-transparent"
+                    >
+                      <option value="low">Low</option>
+                      <option value="medium">Medium</option>
+                      <option value="high">High</option>
+                    </select>
+                  </div>
+
+                  <Input
+                    label="Due Date"
+                    type="date"
+                    value={editDueDate}
+                    onChange={(e) => setEditDueDate(e.target.value)}
+                    fullWidth
+                  />
+                </div>
+
                 <div className="mt-4">
                   <label className="flex items-center">
                     <input
@@ -299,13 +359,6 @@ export default function CompletedTasksPage() {
               </div>
             </div>
           )}
-
-          {/* Chatbot */}
-          <div className="fixed bottom-6 right-6 z-50">
-            <div className="bg-[rgb(var(--primary))] text-white p-4 rounded-full shadow-lg cursor-pointer hover:opacity-90 transition-colors">
-              <span className="text-xl">💬</span>
-            </div>
-          </div>
         </div>
       </main>
     </div>

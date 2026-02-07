@@ -1,36 +1,33 @@
 'use client'
 
-import Navbar from '@/components/layout/Navbar';
+
 import Button from '@/components/ui/Button';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
+import Card from '@/components/ui/Card';
 
 export default function HomePage() {
   const features = [
     {
-      icon: '⚡',
-      title: 'Add & Manage Tasks Easily',
-      description: 'Simple interface to create and organize your tasks in seconds.'
+      icon: '📋',
+      title: 'Task Management',
+      description: 'Easily create, organize, and prioritize your daily tasks with our intuitive interface.'
     },
     {
-      icon: '✅',
-      title: 'Pending & Completed Tracking',
-      description: 'Keep track of what needs to be done and what you\'ve finished.'
+      icon: '🤖',
+      title: 'AI Chatbot Assistant',
+      description: 'Get smart recommendations and assistance with our integrated AI chatbot.'
     },
     {
-      icon: '📊',
-      title: 'Visual Dashboard Overview',
-      description: 'Get insights into your productivity and task completion rates.'
-    },
-    {
-      icon: '🚀',
-      title: 'Clean & Fast Workflow',
-      description: 'Designed for speed and simplicity to maximize your focus.'
+      icon: '⏰',
+      title: 'Priority & Due Dates',
+      description: 'Set priorities and deadlines to stay on top of your most important tasks.'
     }
   ];
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+   
 
       <main className="flex-1 antigravity-gradient-bg py-12 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto">
@@ -42,22 +39,30 @@ export default function HomePage() {
               transition={{ duration: 0.2 }}
             >
               <h1 className="text-4xl md:text-5xl font-bold text-[rgb(var(--foreground))] mb-4">
-                Plan smarter. Finish faster. Stay in control.
+                Your Tasks, Smarter. Your Day, Easier.
               </h1>
 
               <p className="text-lg text-[rgb(var(--muted-foreground))] mb-8 max-w-2xl mx-auto">
-                A simple, powerful task manager that helps you focus on what matters most.
-                Get more done with less stress.
+                A professional SaaS-grade task management platform designed to boost your productivity.
               </p>
 
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1, duration: 0.2 }}
+                className="flex flex-col sm:flex-row gap-4 justify-center"
               >
-                <Button asChild variant="primary">
-                  <a href="/signup">Get Started</a>
-                </Button>
+                <Link href="/signup">
+                  <Button variant="primary">
+                    Start for Free
+                  </Button>
+                </Link>
+
+                <Link href="/login">
+                  <Button variant="outline">
+                    Sign In
+                  </Button>
+                </Link>
               </motion.div>
             </motion.div>
           </section>
@@ -75,32 +80,28 @@ export default function HomePage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1, duration: 0.2 }}
-                  className="antigravity-card p-6 rounded-lg"
                 >
-                  <div className="flex items-start">
-                    <span className="text-3xl mr-4">{feature.icon}</span>
-                    <div>
-                      <h3 className="text-xl font-semibold text-[rgb(var(--foreground))] mb-2">
-                        {feature.title}
-                      </h3>
-                      <p className="text-[rgb(var(--muted-foreground))]">
-                        {feature.description}
-                      </p>
+                  <Card animated={true} className="p-6">
+                    <div className="flex items-start">
+                      <span className="text-3xl mr-4">{feature.icon}</span>
+                      <div>
+                        <h3 className="text-xl font-semibold text-[rgb(var(--foreground))] mb-2">
+                          {feature.title}
+                        </h3>
+                        <p className="text-[rgb(var(--muted-foreground))]">
+                          {feature.description}
+                        </p>
+                      </div>
                     </div>
-                  </div>
+                  </Card>
                 </motion.div>
               ))}
             </div>
           </section>
-
-          {/* Chatbot */}
-          <div className="fixed bottom-6 right-6 z-50">
-            <div className="bg-[rgb(var(--primary))] text-white p-4 rounded-full shadow-lg cursor-pointer hover:opacity-90 transition-colors">
-              <span className="text-xl">💬</span>
-            </div>
-          </div>
         </div>
       </main>
+
+      
     </div>
   );
 }

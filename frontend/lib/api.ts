@@ -58,7 +58,7 @@ class ApiClient {
       if (!response.ok) {
         // Extract error message from various response formats
         let errorMessage = `HTTP error! status: ${response.status}`;
-        
+
         if (typeof data === 'object' && data !== null) {
           if (data.detail && typeof data.detail === 'string') {
             errorMessage = data.detail;
@@ -74,9 +74,9 @@ class ApiClient {
             }
           }
         }
-        
+
         console.error(`[API] Error: ${errorMessage}`, data);
-        
+
         return {
           success: false,
           error: errorMessage,
@@ -84,9 +84,25 @@ class ApiClient {
         };
       }
 
+      // Transform response data from snake_case to camelCase
+      let transformedData = data.data || data;
+
+      // If transformedData is an array, transform each item
+      if (Array.isArray(transformedData)) {
+        transformedData = transformedData.map(item => transformFromSnakeToCamel(item));
+      } else if (transformedData && typeof transformedData === 'object') {
+        // If it's a single object, transform it recursively
+        transformedData = transformFromSnakeToCamel(transformedData);
+
+        // Special handling for nested tasks array (from getTasks endpoint)
+        if (transformedData.tasks && Array.isArray(transformedData.tasks)) {
+          transformedData.tasks = transformedData.tasks.map((item: any) => transformFromSnakeToCamel(item));
+        }
+      }
+
       return {
         success: true,
-        data: data.data || data,
+        data: transformedData,
         message: data.message
       };
     } catch (error: any) {
@@ -119,16 +135,20 @@ class ApiClient {
   }
 
   async createTask(task: TodoCreateInput): Promise<ApiResponse<Todo>> {
+    // Transform camelCase to snake_case for API request
+    const snakeCaseTask = transformToSnakeCase(task);
     return this.request<Todo>('/api/tasks/', {
       method: 'POST',
-      body: JSON.stringify(task),
+      body: JSON.stringify(snakeCaseTask),
     });
   }
 
   async updateTask(id: string, task: TodoUpdateInput): Promise<ApiResponse<Todo>> {
+    // Transform camelCase to snake_case for API request
+    const snakeCaseTask = transformToSnakeCase(task);
     return this.request<Todo>(`/api/tasks/${id}`, {
       method: 'PUT',
-      body: JSON.stringify(task),
+      body: JSON.stringify(snakeCaseTask),
     });
   }
 
@@ -143,6 +163,42 @@ class ApiClient {
       method: 'PATCH',
     });
   }
+}
+
+// Helper function to convert snake_case keys to camelCase
+function transformFromSnakeToCamel(obj: any): any {
+  if (obj === null || typeof obj !== 'object' || Array.isArray(obj)) {
+    return obj;
+  }
+
+  const convertedObj: any = {};
+  for (const [key, value] of Object.entries(obj)) {
+    // Convert snake_case to camelCase
+    const camelCaseKey = key.replace(/_([a-z])/g, (match) => match[1].toUpperCase());
+    // Recursively convert nested objects
+    convertedObj[camelCaseKey] = typeof value === 'object' && value !== null && !Array.isArray(value)
+      ? transformFromSnakeToCamel(value)
+      : value;
+  }
+  return convertedObj;
+}
+
+// Helper function to convert camelCase keys to snake_case
+function transformToSnakeCase(obj: any): any {
+  if (obj === null || typeof obj !== 'object' || Array.isArray(obj)) {
+    return obj;
+  }
+
+  const convertedObj: any = {};
+  for (const [key, value] of Object.entries(obj)) {
+    // Convert camelCase to snake_case
+    const snakeCaseKey = key.replace(/[A-Z]/g, (match) => `_${match.toLowerCase()}`);
+    // Recursively convert nested objects
+    convertedObj[snakeCaseKey] = typeof value === 'object' && value !== null && !Array.isArray(value)
+      ? transformToSnakeCase(value)
+      : value;
+  }
+  return convertedObj;
 }
 
 export const apiClient = new ApiClient(API_BASE_URL);
