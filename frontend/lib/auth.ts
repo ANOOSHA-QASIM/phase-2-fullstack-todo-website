@@ -1,13 +1,16 @@
 /**
- * Authentication utilities for token handling only
- * This file contains functions for managing authentication tokens
- * as per the specification that requires token consumption only
+ * Authentication utilities and hooks for Phase 3 AI-powered Todo Chatbot
+ * Constitutional Compliance: This module strictly follows the Phase 3 System Constitution.
  */
+
+'use client';
+
+import { useState, useEffect } from 'react';
 
 // Get the auth token from storage
 export const getToken = (): string | null => {
   if (typeof window !== 'undefined') {
-    return localStorage.getItem('authToken');
+    return localStorage.getItem('access_token');
   }
   return null;
 };
@@ -15,14 +18,14 @@ export const getToken = (): string | null => {
 // Set the auth token in storage
 export const setToken = (token: string): void => {
   if (typeof window !== 'undefined') {
-    localStorage.setItem('authToken', token);
+    localStorage.setItem('access_token', token);
   }
 };
 
 // Remove the auth token from storage
 export const removeToken = (): void => {
   if (typeof window !== 'undefined') {
-    localStorage.removeItem('authToken');
+    localStorage.removeItem('access_token');
   }
 };
 
@@ -58,3 +61,40 @@ export const getUserFromToken = (): any | null => {
     return null;
   }
 };
+
+/**
+ * useAuth hook - Extract userId from JWT token and provide authentication state
+ *
+ * Returns:
+ * - userId: string | null - User ID extracted from JWT token (sub claim)
+ * - isAuthenticated: boolean - Whether user has valid token
+ */
+export function useAuth() {
+  const [userId, setUserId] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const token = getToken();
+    if (token) {
+      try {
+        const decoded = getUserFromToken();
+        if (decoded && decoded.sub) {
+          setUserId(decoded.sub);
+          setIsAuthenticated(true);
+        } else {
+          setUserId(null);
+          setIsAuthenticated(false);
+        }
+      } catch (error) {
+        console.error('Error extracting userId from token:', error);
+        setUserId(null);
+        setIsAuthenticated(false);
+      }
+    } else {
+      setUserId(null);
+      setIsAuthenticated(false);
+    }
+  }, []);
+
+  return { userId, isAuthenticated };
+}
